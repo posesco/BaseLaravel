@@ -5,7 +5,7 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - 8087:80
+      - 80:80
     command: >
       sh -c "composer install --ignore-platform-reqs --optimize-autoloader --no-interaction --no-progress && 
       /etc/service/docker-entrypoint.sh"
