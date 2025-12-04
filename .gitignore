@@ -1,0 +1,65 @@
+# Laravel
+/src/node_modules
+/src/public/hot
+/src/public/storage
+/src/storage/*.key
+/src/vendor
+/src/.env
+/src/.env.backup
+/src/.env.production
+/src/.phpunit.result.cache
+/src/Homestead.json
+/src/Homestead.yaml
+/src/auth.json
+/src/npm-debug.log
+/src/yarn-error.log
+/src/.fleet
+/src/.idea
+/src/.vscode
+
+# Docker
+.env
+docker-compose.override.yml
+.docker/
+
+# Logs
+*.log
+/src/storage/logs/*.log
+
+# OS
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# IDE
+*.swp
+*.swo
+*~
+.project
+.settings
+.buildpath
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.phpintel/
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Testing
+/src/.phpunit.cache
+/src/coverage/
+/src/phpunit.xml
+
+# Build artifacts
+/src/public/build
+/src/public/mix-manifest.json
+/src/public/hot
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+*.temp
