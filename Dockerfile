@@ -1,35 +1,44 @@
-FROM alpine:3.17.2
+FROM alpine:3.23.0
+
 RUN apk --no-cache add \
-        zip \
-        php81 \
-        php81-fpm \
-        php81-session \
-        php81-dom \
-        php81-intl \
-        php81-mbstring \
-        php81-curl \
-        php81-xml \
-        php81-zip \
-        php81-mysqli \
-        php81-pdo \
-        php81-pdo_mysql \
-        php81-gd \
-        php81-phar \
-        php81-tokenizer \
+        php84 php84-cli php84-fpm php84-opcache \
+        php84-openssl php84-curl php84-mbstring \
+        php84-tokenizer php84-xml php84-xmlwriter \
+        php84-xmlreader php84-ctype php84-fileinfo \
+        php84-bcmath php84-pdo php84-pdo_mysql php84-iconv \
+        php84-mysqli php84-session php84-dom \
+        php84-intl php84-zip php84-gd php84-phar \
         nginx \
         runit \
         curl \
-    && rm -rf /var/cache/apk/* \
-    && chown -R nobody.nobody /run \
-    && chown -R nobody.nobody /var/lib/nginx \
-    && chown -R nobody.nobody /var/log/nginx
-COPY --chown=nobody nginx/ /etc/nginx
-COPY --chown=nobody php/ /etc/php81
-COPY --chown=nobody service/ /etc/service
-COPY --from=composer:2.5.4 /usr/bin/composer /usr/bin/composer
-USER nobody
+        git \
+    && rm -rf /var/cache/apk/*
+COPY --from=composer:2.9.2 /usr/bin/composer /usr/bin/composer
+
+RUN addgroup -g 1000 laravel && \
+    adduser -D -u 1000 -G laravel laravel
+
+RUN mkdir -p /var/www/html /run/php && \
+    chown -R laravel:laravel /var/www/html /var/lib/nginx /var/log/nginx /run /tmp
+
+COPY --chown=laravel:laravel nginx/ /etc/nginx/
+COPY --chown=laravel:laravel php/ /etc/php84/
+COPY --chown=laravel:laravel service/ /etc/service/
+
+RUN chmod +x /etc/service/docker-entrypoint.sh \
+             /etc/service/nginx/run \
+             /etc/service/php/run
+
+RUN curl -o /usr/local/bin/php-fpm-healthcheck \
+    https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck \
+    && chmod +x /usr/local/bin/php-fpm-healthcheck
+
+USER laravel
 WORKDIR /var/www/html
-COPY --chown=nobody laravel/ .
-RUN composer install --ignore-platform-reqs --optimize-autoloader --no-interaction --no-progress
+
 EXPOSE 80
-CMD [ "/etc/service/docker-entrypoint.sh" ]
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+    CMD php-fpm-healthcheck || exit 1
+
+CMD ["/etc/service/docker-entrypoint.sh"]
