@@ -1,0 +1,5 @@
+[04-Dec-2025 22:48:35 UTC] PHP Warning:  require(/var/www/html/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /var/www/html/public/index.php on line 14
+[04-Dec-2025 22:48:35 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/var/www/html/public/../vendor/autoload.php' (include_path='.:/usr/share/php84') in /var/www/html/public/index.php:14
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/public/index.php on line 14
