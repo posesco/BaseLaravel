@@ -1,4 +1,3 @@
 #!/bin/sh -e
 exec 2>&1
-exec env - PATH=$PATH nginx -g 'daemon off;'
-exec php-fpm81 -F
+exec nginx -g 'daemon off;'
