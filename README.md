@@ -1,12 +1,14 @@
 # Laravel Docker Setup
 
 ## Tech Stack
-- **PHP:** 8.4
+- **PHP:** 8.4 (Alpine 3.23)
 - **Nginx:** Latest (Alpine)
-- **Composer:** 2.9.2
-- **Laravel:** 11.x (latest)
-- **MariaDB:** 11.8.5
-- **Alpine Linux:** 3.23.0
+- **Composer:** 2.x (Latest)
+- **Laravel:** 13.x
+- **Frontend:** Vite 7, Tailwind CSS 4
+- **Node.js/npm:** Latest (Alpine)
+- **MariaDB:** 12.2
+- **Alpine Linux:** 3.23
 
 ## Requirements
 - Docker
@@ -16,7 +18,7 @@
 
 ### 1. Create Laravel project
 ```bash
-docker run --rm -v $(pwd):/app -w /app composer:2.9.2 create-project laravel/laravel src
+docker run --rm -v $(pwd):/app -w /app composer:2 create-project laravel/laravel src
 ```
 ### 2. Create .env file for Docker
 ```bash
@@ -38,15 +40,21 @@ docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
 ```
 
-### 5. Fix permissions
+### 5. Frontend Setup
 ```bash
-docker compose exec -u root app chown -R laravel:laravel storage bootstrap/cache
+docker compose exec app npm install
+docker compose exec app npm run build # Or 'npm run dev' for development
+```
+
+### 6. Fix permissions
+```bash
+docker compose exec -u root app chown -R laravel:laravel vendor node_modules storage bootstrap/cache
 docker compose exec app chmod -R 775 storage bootstrap/cache
 ```
 
 ## Access
-- Application: http://localhost:8080
-- Database: localhost:3306
+- Application: http://localhost:8081
+- Database: localhost:3306 (internal: mariadb:3306)
 
 ## Useful commands
 
@@ -55,13 +63,22 @@ docker compose exec app chmod -R 775 storage bootstrap/cache
 docker compose exec app php artisan migrate
 docker compose exec app php artisan make:controller ControllerName
 docker compose exec app php artisan tinker
+docker compose exec app php artisan test
 ```
 
 ### Composer
 ```bash
 docker compose exec app composer install
+docker compose exec app composer update
 docker compose exec app composer require package/name
 docker compose exec app composer dump-autoload
+```
+
+### Frontend (npm)
+```bash
+docker compose exec app npm install
+docker compose exec app npm run dev
+docker compose exec app npm run build
 ```
 
 ### Logs
