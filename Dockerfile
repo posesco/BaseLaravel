@@ -1,4 +1,4 @@
-FROM alpine:3.23.0
+FROM alpine:3.23
 
 RUN apk --no-cache add \
         php84 php84-cli php84-fpm php84-opcache \
@@ -12,8 +12,10 @@ RUN apk --no-cache add \
         runit \
         curl \
         git \
+        nodejs \
+        npm \
     && rm -rf /var/cache/apk/*
-COPY --from=composer:2.9.2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN addgroup -g 1000 laravel && \
     adduser -D -u 1000 -G laravel laravel

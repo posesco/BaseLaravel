@@ -8,7 +8,7 @@ services:
     container_name: laravel-app
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
       - ./src:/var/www/html
       - laravel-vendor:/var/www/html/vendor
@@ -17,7 +17,7 @@ services:
       APP_NAME: "My Laravel App"
       APP_ENV: local
       APP_DEBUG: "true"
-      APP_URL: http://localhost:8080
+      APP_URL: http://localhost:8081
       
       DB_CONNECTION: mysql
       DB_HOST: mariadb
@@ -40,7 +40,7 @@ services:
       - laravel
 
   mariadb:
-    image: mariadb:11.8.5
+    image: mariadb:12.2
     container_name: laravel-db
     restart: unless-stopped
     ports:
